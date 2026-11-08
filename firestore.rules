@@ -1,0 +1,10 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Each user reads only their own servers and invoices. Writes come from the backend (Admin SDK bypasses these rules).
+    match /users/{uid}/{collection}/{doc} {
+      allow read: if request.auth != null && request.auth.uid == uid;
+      allow write: if false;
+    }
+  }
+}
